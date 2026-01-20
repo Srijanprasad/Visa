@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+venv.bak/
+.venv-2/
+
+# Environment Variables
+.env
+.secrets
+.streamlit/secrets.toml
+
+# Streamlit
+.streamlit/config.toml
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Project Specific
+vector_db/
+text_data.txt
+data/
+demo.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
