@@ -2,7 +2,7 @@
 
 A professional decision support system for analyzing UK Visa eligibility against the **January 2026 Immigration Rules**. Built with Streamlit, Pinecone, and Ollama (RAG).
 
-## 🚀 Features
+##  Features
 
 - **Identity Profile Verification**: Collect and verify 18+ identity entities.
 - **Route-Specific Eligibility**: Support for multiple visa categories:
@@ -23,7 +23,7 @@ A professional decision support system for analyzing UK Visa eligibility against
 - **LLM Engine**: [Ollama](https://ollama.com/) (using `llama2` or compatible models)
 - **Framework**: [LangChain](https://www.langchain.com/)
 
-## 📋 Prerequisites
+##  Prerequisites
 
 1. **Python 3.8+**
 2. **Pinecone API Key**: Required for vector search functionality.
@@ -33,7 +33,7 @@ A professional decision support system for analyzing UK Visa eligibility against
    ollama serve
    ```
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 1. **Clone the repository**:
    ```bash
@@ -54,14 +54,14 @@ A professional decision support system for analyzing UK Visa eligibility against
    OLLAMA_MODEL=llama2
    ```
 
-## 🏃 Running the Application
+##  Running the Application
 
 Start the Streamlit server:
 ```bash
 streamlit run app.py
 ```
 
-## 📤 Deployment to Streamlit Cloud
+## Deployment to Streamlit Cloud
 
 1. Push your code to a GitHub repository.
 2. Log in to [Streamlit Cloud](https://share.streamlit.io/).
@@ -73,6 +73,6 @@ streamlit run app.py
 > [!NOTE]
 > For Streamlit Cloud deployment, ensure your Ollama endpoint is accessible or replace the local Ollama logic with a cloud-based LLM provider (like Groq or OpenAI) for production use.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
