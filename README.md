@@ -63,12 +63,18 @@ streamlit run app.py
 
 ## Deployment to Streamlit Cloud
 
+### Method 1: Connect GitHub (Recommended)
 1. Push your code to a GitHub repository.
 2. Log in to [Streamlit Cloud](https://share.streamlit.io/).
-3. Connect your GitHub repository.
-4. Add your **Secrets** (Environment Variables) in the Streamlit Cloud dashboard:
+3. Connect your GitHub repository: `Srijanprasad/Visa`.
+4. Set **Main file path** to: `app.py`.
+5. Add your **Secrets** (Environment Variables) in the dashboard:
    - `PINECONE_API_KEY`
-5. Click **Deploy**.
+6. Click **Deploy**.
+
+### Method 2: Direct URL Deployment
+If Streamlit asks for a "Github URL pointing to a .py file", use exactly this:
+`https://github.com/Srijanprasad/Visa/blob/main/app.py`
 
 > [!NOTE]
 > For Streamlit Cloud deployment, ensure your Ollama endpoint is accessible or replace the local Ollama logic with a cloud-based LLM provider (like Groq or OpenAI) for production use.
