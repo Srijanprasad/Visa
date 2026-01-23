@@ -39,9 +39,9 @@ venv/
 
 # Project Specific
 
-text_data.txt
-data/
-demo.ipynb
+
+
+
 app.py
 
 # OS
