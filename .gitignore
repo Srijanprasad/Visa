@@ -24,8 +24,6 @@ wheels/
 # Virtual Environments
 venv/
 .venv/
-venv.bak/
-.venv-2/
 
 # Environment Variables
 .env
@@ -40,11 +38,17 @@ venv.bak/
 */.ipynb_checkpoints/*
 
 # Project Specific
-vector_db/
+
 text_data.txt
 data/
 demo.ipynb
+app.py
 
 # OS
 .DS_Store
 Thumbs.db
+
+
+#Folders
+visa_rules/
+visa_services/
