@@ -43,7 +43,3 @@ venv/
 .DS_Store
 Thumbs.db
 
-
-#Folders
-visa_rules/
-visa_services/
