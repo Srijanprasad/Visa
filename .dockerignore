@@ -1,0 +1,10 @@
+.git
+.venv
+.venv39
+__pycache__
+*.pyc
+.env
+.secrets
+.streamlit/secrets.toml
+.DS_Store
+.ipynb_checkpoints

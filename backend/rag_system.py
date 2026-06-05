@@ -14,8 +14,9 @@ from PyPDF2 import PdfReader
 import requests
 
 # Configuration
-DATA_DIR = "../data"
-DB_DIR = "../visa_db"
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+DB_DIR = BASE_DIR / "visa_db"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:1234")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "google/gemma-4-e4b")  
@@ -24,13 +25,13 @@ class SwiftVisaRAG:
     """RAG system for UK Visa Eligibility Screening"""
 
     def __init__(self, data_dir=DATA_DIR, db_path=DB_DIR):
-        self.data_dir = data_dir
-        self.db_path = db_path
-        self.chunks_file = f"{db_path}/chunks.pkl"
-        self.index_file = f"{db_path}/faiss.index"
-        self.metadata_file = f"{db_path}/metadata.json"
+        self.data_dir = Path(data_dir)
+        self.db_path = Path(db_path)
+        self.chunks_file = self.db_path / "chunks.pkl"
+        self.index_file = self.db_path / "faiss.index"
+        self.metadata_file = self.db_path / "metadata.json"
 
-        os.makedirs(db_path, exist_ok=True)
+        self.db_path.mkdir(parents=True, exist_ok=True)
 
         print(f"Loading embedding model ({EMBEDDING_MODEL}) on CPU...")
         self.embedder = SentenceTransformer(EMBEDDING_MODEL, device='cpu')
@@ -42,9 +43,9 @@ class SwiftVisaRAG:
 
     def load_from_disk(self):
         """Load existing index from disk"""
-        if os.path.exists(self.index_file) and os.path.exists(self.chunks_file):
+        if self.index_file.exists() and self.chunks_file.exists():
             print("Loading existing visa database...")
-            self.index = faiss.read_index(self.index_file)
+            self.index = faiss.read_index(str(self.index_file))
             with open(self.chunks_file, 'rb') as f:
                 self.chunks = pickle.load(f)
             with open(self.metadata_file, 'r') as f:
@@ -55,14 +56,15 @@ class SwiftVisaRAG:
 
     def extract_pdf(self, pdf_path):
         """Extract text from a single PDF"""
-        if not os.path.exists(pdf_path):
+        pdf_path = Path(pdf_path)
+        if not pdf_path.exists():
             print(f"File not found: {pdf_path}")
             return []
 
         print(f"Extracting: {Path(pdf_path).name}")
         pages_text = []
         try:
-            reader = PdfReader(pdf_path)
+            reader = PdfReader(str(pdf_path))
             for page_num, page in enumerate(reader.pages):
                 text = page.extract_text()
                 if text and text.strip():
@@ -83,8 +85,8 @@ class SwiftVisaRAG:
         print("=" * 60 + "\n")
 
         all_pages = []
-        for pdf_file in Path(self.data_dir).glob("*.pdf"):
-            pages = self.extract_pdf(str(pdf_file))
+        for pdf_file in self.data_dir.glob("*.pdf"):
+            pages = self.extract_pdf(pdf_file)
             all_pages.extend(pages)
 
         print(f"Total pages extracted: {len(all_pages)}\n")
@@ -184,7 +186,7 @@ class SwiftVisaRAG:
         self.chunks = chunk_texts
         self.metadata = [c['metadata'] for c in chunks_data]
 
-        faiss.write_index(self.index, self.index_file)
+        faiss.write_index(self.index, str(self.index_file))
         with open(self.chunks_file, 'wb') as f:
             pickle.dump(self.chunks, f)
         with open(self.metadata_file, 'w') as f:
@@ -288,12 +290,6 @@ Your task is to evaluate whether the user is likely ELIGIBLE or NOT ELIGIBLE for
 if __name__ == "__main__":
     print("SwiftVisa RAG Ingestion Script")
     print("=" * 60 + "\n")
-
-    # Determine correct paths
-    if not os.path.exists(DATA_DIR):
-        # Running from project root
-        DATA_DIR = "./data"
-        DB_DIR = "./visa_db"
 
     rag = SwiftVisaRAG(data_dir=DATA_DIR, db_path=DB_DIR)
     rag.setup()

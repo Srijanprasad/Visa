@@ -809,6 +809,7 @@ import pandas as pd
 # Heavy ML libraries (sentence-transformers, faiss, numpy) are imported lazily
 # inside RAGSystemLoader methods to avoid top-level import failures when
 # the environment doesn't have those packages installed.
+BASE_DIR = Path(__file__).resolve().parent
 from visa_rules.student_rules import evaluate_student
 from visa_rules.graduate_rules import evaluate as evaluate_graduate
 from visa_rules.skilled_worker_rules import evaluate as evaluate_skilled_worker
@@ -1351,12 +1352,14 @@ class RAGSystemLoader:
    
     def __init__(self, system_type="india", db_path=None):
         self.system_type = system_type
-        self.db_path = db_path or ("./visa_db" if system_type == "india" else "./uk_visa_db")
+        default_db_path = BASE_DIR / ("visa_db" if system_type == "india" else "uk_visa_db")
+        self.db_path = Path(db_path) if db_path else default_db_path
         self.index = None
         self.chunks = []
         self.metadata = []
         self.embedder = None
-        self.ollama_url = "http://localhost:11434/api/generate"
+        self.ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
+        self.ollama_model = os.getenv("OLLAMA_MODEL", "mistral:latest")
        
     def load_model(self):
         """Load sentence transformer model"""
@@ -1374,9 +1377,9 @@ class RAGSystemLoader:
     def load_from_disk(self):
         """Load FAISS index and chunks from disk"""
         if not all([
-            os.path.exists(f"{self.db_path}/faiss.index"),
-            os.path.exists(f"{self.db_path}/chunks.pkl"),
-            os.path.exists(f"{self.db_path}/metadata.json")
+            (self.db_path / "faiss.index").exists(),
+            (self.db_path / "chunks.pkl").exists(),
+            (self.db_path / "metadata.json").exists()
         ]):
             return False
        
@@ -1388,14 +1391,14 @@ class RAGSystemLoader:
                 st.error(f"⚠️ faiss not available: {e}")
                 return False
 
-            self.index = faiss.read_index(f"{self.db_path}/faiss.index")
+            self.index = faiss.read_index(str(self.db_path / "faiss.index"))
            
             # Load chunks
-            with open(f"{self.db_path}/chunks.pkl", "rb") as f:
+            with open(self.db_path / "chunks.pkl", "rb") as f:
                 self.chunks = pickle.load(f)
            
             # Load metadata
-            with open(f"{self.db_path}/metadata.json", "r") as f:
+            with open(self.db_path / "metadata.json", "r") as f:
                 self.metadata = json.load(f)
            
             return len(self.chunks) > 0
@@ -1462,7 +1465,7 @@ Answer:"""
             response = requests.post(
                 self.ollama_url,
                 json={
-                    "model": "mistral:latest",
+                    "model": self.ollama_model,
                     "prompt": prompt,
                     "stream": False,
                     "temperature": 0.3,
@@ -1486,7 +1489,7 @@ def get_system_stats(rag_system):
         return {
             'total_chunks': len(rag_system.chunks),
             'vector_dim': rag_system.index.d,
-            'db_size': os.path.getsize(f"{rag_system.db_path}/faiss.index") / (1024 * 1024),  # MB
+            'db_size': os.path.getsize(rag_system.db_path / "faiss.index") / (1024 * 1024),  # MB
         }
     return None
 

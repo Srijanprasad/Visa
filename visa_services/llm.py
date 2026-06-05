@@ -3,7 +3,7 @@ import requests
 import json
 
 # LM Studio Configuration
-LM_STUDIO_API_KEY = os.getenv("LM_STUDIO_API_KEY", "sk-lm-95OOE1M4:Bc7JSNqEE63g3CwDZTG3")
+LM_STUDIO_API_KEY = os.getenv("LM_STUDIO_API_KEY", "lm-studio")
 LM_STUDIO_BASE_URL = os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234/v1")
 LM_STUDIO_MODEL = os.getenv("LM_STUDIO_MODEL", "local-model")
 

@@ -6,13 +6,18 @@ pinecone-client<3.0.0
 langchain
 langchain-core
 langchain-community
+langchain-chroma
 langchain-pinecone
 langchain-huggingface
 langchain-groq
+langchain-openai
 
 sentence-transformers
 torch
+faiss-cpu
+numpy
 PyMuPDF
+PyPDF2
 streamlit-extras
 streamlit-option-menu
 streamlit-lottie

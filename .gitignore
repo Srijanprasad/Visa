@@ -24,6 +24,7 @@ wheels/
 # Virtual Environments
 venv/
 .venv/
+.venv39/
 
 # Environment Variables
 .env
@@ -42,4 +43,3 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
-

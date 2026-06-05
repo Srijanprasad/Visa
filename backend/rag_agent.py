@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
@@ -7,9 +8,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
 # Configuration
-DB_DIR = "../chroma_db"
-if not os.path.exists(DB_DIR):
-    DB_DIR = "chroma_db" # Fallback if running from root
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_DIR = BASE_DIR / "chroma_db"
 
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 
@@ -27,7 +27,7 @@ class VisaEligibilityAgent:
             model_kwargs={'device': 'cpu'}
         )
         self.vector_store = Chroma(
-            persist_directory=DB_DIR,
+            persist_directory=str(DB_DIR),
             embedding_function=self.embeddings
         )
         self.retriever = self.vector_store.as_retriever(

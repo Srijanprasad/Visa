@@ -1,18 +1,20 @@
 import os
 import glob
+from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 # Configuration
-DATA_DIR = "../data"
-DB_DIR = "../chroma_db"
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+DB_DIR = BASE_DIR / "chroma_db"
 EMBEDDING_MODEL_NAME = "google/gemma-4-e4b"
 
 def ingest_documents():
     print(f"Checking for documents in {DATA_DIR}...")
-    pdf_files = glob.glob(os.path.join(DATA_DIR, "*.pdf"))
+    pdf_files = glob.glob(str(DATA_DIR / "*.pdf"))
     
     if not pdf_files:
         print("No PDF files found in the data directory.")
@@ -51,25 +53,20 @@ def ingest_documents():
 
     # Create & Persist Vector Store
     print(f"Creating Chroma vector store in {DB_DIR}...")
-    if os.path.exists(DB_DIR):
+    if DB_DIR.exists():
         print("Existing DB directory found. It will be updated.")
     
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory=DB_DIR
+        persist_directory=str(DB_DIR)
     )
     
     print("Ingestion complete. Vector store created.")
 
 if __name__ == "__main__":
-    if not os.path.exists(DATA_DIR):
-        # Handle case where script is run from root or backend
-        if os.path.exists("data"):
-            DATA_DIR = "data"
-            DB_DIR = "chroma_db"
-        else:
-             print(f"Error: Data directory not found at {DATA_DIR}")
-             exit(1)
+    if not DATA_DIR.exists():
+        print(f"Error: Data directory not found at {DATA_DIR}")
+        exit(1)
              
     ingest_documents()
