@@ -14,11 +14,11 @@ from PyPDF2 import PdfReader
 import requests
 
 # Configuration
-DATA_DIR = "data"
-DB_DIR = "visa_db"
+DATA_DIR = "../data"
+DB_DIR = "../visa_db"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "mistral:latest"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:1234")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "google/gemma-4-e4b")  
 
 class SwiftVisaRAG:
     """RAG system for UK Visa Eligibility Screening"""
@@ -291,9 +291,9 @@ if __name__ == "__main__":
 
     # Determine correct paths
     if not os.path.exists(DATA_DIR):
-        # If running from backend folder
-        DATA_DIR = "../data"
-        DB_DIR = "../visa_db"
+        # Running from project root
+        DATA_DIR = "./data"
+        DB_DIR = "./visa_db"
 
     rag = SwiftVisaRAG(data_dir=DATA_DIR, db_path=DB_DIR)
     rag.setup()

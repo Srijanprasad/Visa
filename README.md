@@ -47,11 +47,20 @@ A professional decision support system for analyzing UK Visa eligibility against
    ```
 
 3. **Configure Environment Variables**:
-   Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory by copying `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   Then fill in your real secrets:
    ```env
    PINECONE_API_KEY=your_pinecone_api_key
+   PINECONE_ENVIRONMENT=your_pinecone_environment
+   PINECONE_INDEX_NAME=visa-index
+   UK_VISA_DB_PATH=./uk_visa_db
+   INDIA_VISA_DB_PATH=./visa_db
    OLLAMA_URL=http://localhost:11434/api/generate
-   OLLAMA_MODEL=llama2
+   MODEL_NAME=google/gemma-4-e4b
+   LLM_API_KEY=lm-studio
    ```
 
 ##  Running the Application

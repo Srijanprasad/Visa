@@ -15,8 +15,9 @@ EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 
 # Use local server (LM Studio)
 # User should ensure LM Studio is running on localhost:1234
-LLM_BASE_URL = "http://localhost:1234/v1"
-LLM_API_KEY = "lm-studio" # Placeholder key
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "http://localhost:1234/v1")
+LLM_MODEL_NAME = os.getenv("MODEL_NAME", "google/gemma-4-e4b")
+LLM_API_KEY = os.getenv("LLM_API_KEY", "lm-studio")
 
 class VisaEligibilityAgent:
     def __init__(self):
@@ -37,6 +38,7 @@ class VisaEligibilityAgent:
         self.llm = ChatOpenAI(
             base_url=LLM_BASE_URL,
             api_key=LLM_API_KEY,
+            model_name=LLM_MODEL_NAME,
             temperature=0.1,
             streaming=True
         )

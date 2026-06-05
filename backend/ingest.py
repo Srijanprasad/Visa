@@ -8,7 +8,7 @@ from langchain_chroma import Chroma
 # Configuration
 DATA_DIR = "../data"
 DB_DIR = "../chroma_db"
-EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
+EMBEDDING_MODEL_NAME = "google/gemma-4-e4b"
 
 def ingest_documents():
     print(f"Checking for documents in {DATA_DIR}...")
